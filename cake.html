@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Make a Wish 🎂</title><link rel="stylesheet" href="style.css"></head>
+<body><div id="stars"></div><div class="moon"></div><div id="particles"></div><div id="fireworks"></div>
+
+<section class="page"><div class="card">
+<p class="eyebrow">One more thing...</p><h2>Make a wish, <span>Joshitha</span> 🎂</h2>
+<p class="sub">Click the candles to blow them out.</p>
+<div class="cake-stage">
+  <div class="cake-decor">
+    <span class="cake-balloon left">🎈</span><span class="cake-balloon right">🎈</span>
+    <span class="cake-balloon left2">🎈</span><span class="cake-balloon right2">🎈</span>
+    <span class="cake-heart h1">♥</span><span class="cake-heart h2">♥</span><span class="cake-heart h3">♥</span><span class="cake-heart h4">♥</span>
+    <span class="cake-sparkle s1">✦</span><span class="cake-sparkle s2">✦</span><span class="cake-sparkle s3">✧</span><span class="cake-sparkle s4">✧</span>
+  </div>
+  <div class="cake">
+    <div class="candle c1"></div><div class="candle c2"></div><div class="candle c3"></div>
+    <div class="cake-top"></div><div class="cake-body"></div><div class="plate"></div>
+  </div>
+  <div class="cake-glow-ring"></div>
+</div>
+<p class="cake-status">✨ Seven little flames, one big birthday wish ✨</p>
+<button class="btn" id="blow">🕯️ Blow Out the Candles</button>
+<div id="wish" class="sub" style="display:none;color:#ffd98a">Wish made! ✨ May it come true. 💖</div>
+</div></section>
+<audio id="birthdayAudio" src="music/birthday-theme.wav" preload="auto" loop></audio>
+<div class="music"><button id="musicBtn">♫</button><div><b>Birthday Music</b><small id="musicStatus">Starting...</small></div><input id="volume" type="range" min="0" max="1" step=".01" value=".45"></div>
+<script>
+const audio=document.getElementById("birthdayAudio");
+const musicBtn=document.getElementById("musicBtn");
+const musicStatus=document.getElementById("musicStatus");
+const volume=document.getElementById("volume");
+let playing=false;
+audio.volume=Number(volume.value);
+
+async function playMusic(){
+  try{
+    await audio.play();
+    playing=true; musicBtn.textContent="❚❚"; musicStatus.textContent="Playing";
+  }catch(e){
+    playing=false; musicBtn.textContent="♫"; musicStatus.textContent="Tap ♫ to play";
+  }
+}
+function pauseMusic(){audio.pause();playing=false;musicBtn.textContent="♫";musicStatus.textContent="Paused"}
+musicBtn.addEventListener("click",()=>playing?pauseMusic():playMusic());
+volume.addEventListener("input",()=>audio.volume=Number(volume.value));
+
+// Try autoplay on every page. If Chrome blocks it, the visible music button
+// immediately provides a user-gesture fallback.
+window.addEventListener("load",()=>setTimeout(playMusic,250));
+document.addEventListener("click",e=>{
+  if(e.target.closest(".music")) return;
+  if(!playing) playMusic();
+},{once:true});
+
+function effects(){
+  const box=document.getElementById("particles");
+  if(!box)return;
+  const items=["🎈","❤️","💖","✨","🌹","🎉"];
+  for(let i=0;i<18;i++){
+    const s=document.createElement("span");s.className="float";s.textContent=items[Math.floor(Math.random()*items.length)];
+    s.style.left=Math.random()*100+"vw";s.style.animationDuration=(6+Math.random()*8)+"s";s.style.animationDelay=Math.random()*3+"s";box.appendChild(s);
+    setTimeout(()=>s.remove(),15000);
+  }
+}
+function fireworks(n=4){
+  const box=document.getElementById("fireworks"); if(!box)return;
+  for(let j=0;j<n;j++)setTimeout(()=>{
+    const cx=15+Math.random()*70,cy=10+Math.random()*50;
+    for(let i=0;i<32;i++){const a=Math.PI*2*i/32,r=70+Math.random()*100,p=document.createElement("i");p.className="firework";p.style.left=cx+"vw";p.style.top=cy+"vh";p.style.setProperty("--x",Math.cos(a)*r+"px");p.style.setProperty("--y",Math.sin(a)*r+"px");box.appendChild(p);setTimeout(()=>p.remove(),1300)}
+  },j*350);
+}
+effects(); setInterval(effects,5000);
+document.getElementById("blow").addEventListener("click",()=>{
+  const btn=document.getElementById("blow");
+  btn.disabled=true; btn.textContent="✨ Wish Made!";
+  document.querySelectorAll(".candle").forEach(x=>x.classList.add("out"));
+  document.getElementById("wish").style.display="block";
+  document.getElementById("wish").classList.add("cake-wish");
+  document.querySelector(".cake-glow-ring").style.animation="none";
+  fireworks(10);
+  if(typeof effects==="function") effects();
+  setTimeout(()=>location.href="wish.html",2200);
+});</script></body></html>

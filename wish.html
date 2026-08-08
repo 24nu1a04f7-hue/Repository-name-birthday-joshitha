@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Make a Wish ✨</title>
+<link rel="stylesheet" href="style.css">
+<style>
+.wish-page{overflow:hidden;background:radial-gradient(circle at 50% 45%,#30124f 0,transparent 32%),linear-gradient(145deg,#03020d,#0b0522 55%,#18051e)}
+.wish-star{font-size:100px;color:#ffd98a;text-shadow:0 0 20px #ffd98a,0 0 70px #ff6fae;animation:starGlow 1.8s ease-in-out infinite alternate}
+.wish-message{max-width:720px;margin:25px auto;color:#dcd2e8;line-height:1.9}
+.wish-line{font-family:"Cormorant Garamond",serif;font-size:clamp(34px,5vw,58px);margin:16px 0;color:#fff}
+.wish-particles{position:absolute;inset:0;pointer-events:none}
+.wish-particles i{position:absolute;color:#ffd98a;font-style:normal;animation:rise 5s linear forwards}
+@keyframes starGlow{to{transform:scale(1.16) rotate(8deg);text-shadow:0 0 30px #fff,0 0 90px #ff6fae}}
+@keyframes rise{from{transform:translateY(110vh) scale(.5);opacity:0}15%{opacity:1}to{transform:translateY(-15vh) scale(1.2);opacity:0}}
+</style>
+</head>
+<body class="wish-page">
+<div id="stars"></div><div class="moon"></div><div class="wish-particles" id="wishParticles"></div>
+<section class="page">
+  <div class="card">
+    <p class="eyebrow">Your wish is made ✨</p>
+    <div class="wish-star">✦</div>
+    <h1 class="wish-line">Make a Wish...</h1>
+    <p class="wish-message">
+      Some wishes are meant to be kept in your heart.<br>
+      I hope yours comes true. 💫
+    </p>
+    <p class="wish-message">
+      And one more thing, Joshitha...<br><br>
+      Life is made beautiful by the people we meet, the memories we create,
+      and the moments we share. I hope this year gives you countless reasons
+      to smile, amazing experiences to remember, and success in everything you do.
+    </p>
+    <p class="wish-line" style="font-size:32px">Keep smiling. Keep shining. Keep being you. ❤️</p>
+    <a class="btn" href="finale.html">✨ Continue the Celebration</a>
+  </div>
+</section>
+<audio id="birthdayAudio" src="music/birthday-theme.wav" preload="auto" loop></audio>
+<div class="music"><button id="musicBtn">♫</button><div><b>Birthday Music</b><small id="musicStatus">Starting...</small></div><input id="volume" type="range" min="0" max="1" step=".01" value=".45"></div>
+<script>
+const audio=document.getElementById("birthdayAudio"),btn=document.getElementById("musicBtn"),status=document.getElementById("musicStatus"),vol=document.getElementById("volume");
+let playing=false; audio.volume=Number(vol.value);
+async function playMusic(){try{await audio.play();playing=true;btn.textContent="❚❚";status.textContent="Playing"}catch(e){status.textContent="Tap ♫ to play"}}
+function pauseMusic(){audio.pause();playing=false;btn.textContent="♫";status.textContent="Paused"}
+btn.onclick=()=>playing?pauseMusic():playMusic();vol.oninput=()=>audio.volume=Number(vol.value);window.addEventListener("load",()=>setTimeout(playMusic,250));
+const box=document.getElementById("wishParticles");
+setInterval(()=>{for(let i=0;i<5;i++){const s=document.createElement("i");s.textContent=["✦","✧","✨","💖"][Math.floor(Math.random()*4)];s.style.left=Math.random()*100+"vw";s.style.animationDuration=(4+Math.random()*5)+"s";box.appendChild(s);setTimeout(()=>s.remove(),9000)}},700);
+</script>
+</body>
+</html>
